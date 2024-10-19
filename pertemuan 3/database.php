@@ -1,50 +1,55 @@
 <?php
+
 class Database {
-    private $host = "localhost";
-    private $user = "root";
-    private $pass = "";
-    private $dbname = "db_php";
-    public $conn;
+    public $host = "localhost";
+    public $username = "root";
+    public $password = "";
+    public $database = "database_php";
+    public $koneksi;
 
     public function __construct() {
-        $this->conn = new mysqli($this->host, $this->user, $this->pass, $this->dbname);
-        if ($this->conn->connect_error) {
-            die("Connection failed: " . $this->conn->connect_error);
+        $this->koneksi = mysqli_connect($this->host, $this->username, $this->password, $this->database);
+        if (mysqli_connect_error()) {
+            echo "Koneksi database gagal: " . mysqli_connect_error();
         }
     }
 
     public function tampilData() {
-        $sql = "SELECT * FROM tb_users";
-        $result = $this->conn->query($sql);
-        return $result;
+        $data = mysqli_query($this->koneksi, "SELECT * FROM tb_users");
+        while ($row = mysqli_fetch_assoc($data)) {
+            $hasil[] = $row;
+        }
+        return $hasil;
     }
 
-    public function tambahData($nama, $jenis_kelamin, $no_hp, $email, $alamat, $foto) {
-        $sql = "INSERT INTO tb_users (nama, jenis_kelamin, no_hp, email, alamat, foto) 
-                VALUES ('$nama', '$jenis_kelamin', '$no_hp', '$email', '$alamat', '$foto')";
-        return $this->conn->query($sql);
+    public function tambahData($nama, $alamat, $nohp, $email, $jenis_kelamin, $foto) {
+        $fotoNama = $this->uploadFoto($foto);
+        mysqli_query($this->koneksi, "INSERT INTO tb_users (nama, alamat, nohp, email, jenis_kelamin, foto) VALUES ('$nama', '$alamat', '$nohp', '$email', '$jenis_kelamin', '$fotoNama')");
     }
 
     public function editData($id) {
-        $sql = "SELECT * FROM tb_users WHERE id = $id";
-        $result = $this->conn->query($sql);
-        return $result->fetch_assoc();
+        $data = mysqli_query($this->koneksi, "SELECT * FROM tb_users WHERE id='$id'");
+        return mysqli_fetch_all($data, MYSQLI_ASSOC);
     }
 
-    public function updateData($id, $nama, $jenis_kelamin, $no_hp, $email, $alamat, $foto) {
-        $sql = "UPDATE tb_users SET nama='$nama', jenis_kelamin='$jenis_kelamin', no_hp='$no_hp', 
-                email='$email', alamat='$alamat', foto='$foto' WHERE id=$id";
-        return $this->conn->query($sql);
+    public function updateData($id, $nama, $alamat, $nohp, $email, $jenis_kelamin, $foto) {
+        if ($foto['name'] != '') {
+            $fotoNama = $this->uploadFoto($foto);
+            mysqli_query($this->koneksi, "UPDATE tb_users SET nama='$nama', alamat='$alamat', nohp='$nohp', email='$email', jenis_kelamin='$jenis_kelamin', foto='$fotoNama' WHERE id='$id'");
+        } else {
+            mysqli_query($this->koneksi, "UPDATE tb_users SET nama='$nama', alamat='$alamat', nohp='$nohp', email='$email', jenis_kelamin='$jenis_kelamin' WHERE id='$id'");
+        }
     }
 
     public function hapusData($id) {
-        $sql = "DELETE FROM tb_users WHERE id=$id";
-        return $this->conn->query($sql);
+        mysqli_query($this->koneksi, "DELETE FROM tb_users WHERE id='$id'");
     }
 
-    public function detailData($id) {
-        $sql = "SELECT * FROM tb_users WHERE id=$id";
-        return $this->conn->query($sql)->fetch_assoc();
+    private function uploadFoto($file) {
+        $targetDir = "uploads/";
+        $targetFile = $targetDir . basename($file["name"]);
+        move_uploaded_file($file["tmp_name"], $targetFile);
+        return basename($file["name"]);
     }
 }
 ?>
