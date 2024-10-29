@@ -50,7 +50,7 @@
                     <h5>Email: <?php echo htmlspecialchars($data['email']); ?></h5>
                     <h5>Address: <?php echo htmlspecialchars($data['alamat']); ?></h5>
                     <h5>Phone Number: <?php echo htmlspecialchars($data['no_hp']); ?></h5>
-                    <a href="edit_user.php?id=<?php echo htmlspecialchars($data['id']); ?>" class="btn btn-custom mt-3">Edit User</a>
+                    <a href="editUser.php?id=<?php echo htmlspecialchars($data['id']); ?>" class="btn btn-custom mt-3">Edit User</a>
                 </div>
             </div>
         </div>
