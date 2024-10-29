@@ -46,8 +46,8 @@
                     echo "<td>" . $row['jenis_kelamin'] . "</td>";
                     echo "<td><img src='uploads/" . $row['foto'] . "' width='60' height='60'></td>";
                     echo "<td class='text-center'>
-                        <a href='edit.php?id=" . $row['id'] . "' class='btn btn-warning btn-sm mb-1'>Edit</a>
-                        <a href='detail.php?id=" . $row['id'] . "' class='btn btn-info btn-sm mb-1'>Detail</a>
+                        <a href='editUser.php?id=" . $row['id'] . "' class='btn btn-warning btn-sm mb-1'>Edit</a>
+                        <a href='detailUser.php?id=" . $row['id'] . "' class='btn btn-info btn-sm mb-1'>Detail</a>
                         <a href='proses.php?id=" . $row['id'] . "&aksi=hapus' class='btn btn-danger btn-sm mb-1'>Hapus</a>
                     </td>";
                     echo "</tr>";
